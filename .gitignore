@@ -1,4 +1,4 @@
-﻿/.idea/*.*
+.idea/
 /JavaRushPlugin.properties
 /.directory
 /out.log
