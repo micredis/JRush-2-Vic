@@ -16,16 +16,15 @@ public class Solution {
     }
 
     private static int longestClump(List<Integer> list) {
-        int longest = 0;
+        int longest = (list.size() > 0) ? 1 : 0;
         for (int i = 0; i < list.size() - 1; ) {
-            int clumpLen = 0;
-            for (; list.get(i) == list.get(i + 1); i++) {
+            int clumpLen = 1;
+            for (; (i + 1 < list.size()) && (list.get(i).equals(list.get(i + 1))); i++) {
                 clumpLen++;
             }
-            i += (clumpLen > 0) ? 0 : 1;
+            i += (clumpLen > 1) ? 0 : 1;
             longest = (clumpLen > longest) ? clumpLen : longest;
         }
-
         return longest;
     }
 
