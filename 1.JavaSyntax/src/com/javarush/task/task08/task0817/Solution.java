@@ -1,7 +1,6 @@
 package com.javarush.task.task08.task0817;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /* 
 Нам повторы не нужны
@@ -26,13 +25,15 @@ public class Solution {
 
     public static void removeTheFirstNameDuplicates(HashMap<String, String> map) {
         //напишите тут ваш код
-        // my working solution that validator won't accept
         HashMap<String, String> copy = new HashMap<>(map);
-        String name = "";
-        for (Map.Entry<String, String> pair : copy.entrySet()) {
-            if (name.equals(pair.getValue()))
+        List<String> names = new ArrayList<>();
+        for (String name : copy.values()) {
+            if (names.contains(name)) {
+                names.remove(name);
                 removeItemFromMapByValue(map, name);
-            name = pair.getValue();
+            } else {
+                names.add(name);
+            }
         }
     }
 
@@ -45,9 +46,9 @@ public class Solution {
     }
 
     public static void main(String[] args) {
-        HashMap<String, String> map = createMap();
-        removeTheFirstNameDuplicates(map);
-        for (String familyName : map.keySet())
-            System.out.println(familyName);
+//        HashMap<String, String> map = createMap();
+//        removeTheFirstNameDuplicates(map);
+//        for (String familyName : map.keySet())
+//            System.out.println(familyName);
     }
 }
