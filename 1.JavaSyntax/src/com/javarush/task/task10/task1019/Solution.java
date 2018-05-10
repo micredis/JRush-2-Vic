@@ -15,28 +15,22 @@ public class Solution {
     }
 
     private static void readInputToMap(HashMap<String, Integer> map) {
-        int id;
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            String sId = reader.readLine();
-            String name = reader.readLine();
             while (true) {
-                if (!name.isEmpty() && !sId.isEmpty()) {
-                    id = Integer.parseInt(sId);
-                    map.put(name, id);
-                    sId = reader.readLine();
-                    name = reader.readLine();
-                } else if (name.isEmpty()) {
-                    id = Integer.parseInt(sId);
-                    map.put(name, id);
+                String sId = reader.readLine();
+                if (sId.isEmpty())
                     break;
-                } else {
-                    map.put(name, null);
+                int id = Integer.parseInt(sId);
+                String name = reader.readLine();
+                if (name.isEmpty()) {
+                    System.out.println(id);
                     break;
                 }
+                map.put(name, id);
             }
             reader.close();
-        } catch (IOException | NumberFormatException ignored) {
+        } catch (Exception ignored) {
         }
     }
 
