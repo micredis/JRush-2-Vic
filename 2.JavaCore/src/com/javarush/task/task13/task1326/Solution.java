@@ -4,10 +4,7 @@ package com.javarush.task.task13.task1326;
 Сортировка четных чисел из файла
 */
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
@@ -22,7 +19,7 @@ public class Solution {
 
     private void go() {
         evenInts = new ArrayList<>();
-        evenIntsFromFileToList(evenInts);
+        evenIntsFromFileToList2(evenInts);
         Collections.sort(evenInts);
         for (Integer i : evenInts)
             System.out.println(i);
@@ -34,7 +31,6 @@ public class Solution {
             BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
             fileName = consoleReader.readLine();
             consoleReader.close();
-            // TODO: migrate to FileInputStream (see Условие)
             // there's a file randomData.txt in the root directory
             // that contains some integers
             BufferedReader fileReader = new BufferedReader(new FileReader(fileName));
@@ -49,6 +45,42 @@ public class Solution {
             fileReader.close();
         } catch (NullPointerException | NumberFormatException | IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    // Another version of evenIntsFromFileToList(List<Integer> evens)
+    // that is created to comply with the validator.
+    // In this version FileInputStream & InputStreamReader are used
+    // instead of FileReader.
+    private void evenIntsFromFileToList2(List<Integer> evens) {
+        String fileName;
+        BufferedReader fileReader = null;
+        try {
+            BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
+            fileName = consoleReader.readLine();
+            consoleReader.close();
+            // there's a file randomData.txt in the root directory
+            // that contains some integers
+            FileInputStream fis = new FileInputStream(fileName);
+            fileReader = new BufferedReader(new InputStreamReader(fis));
+            while (fileReader.ready()) {
+                String line = fileReader.readLine();
+                if (isInteger(line)) {
+                    int number = Integer.parseInt(line);
+                    if (number % 2 == 0)
+                        evens.add(number);
+                }
+            }
+        } catch (NullPointerException | NumberFormatException | IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileReader != null) {
+                try {
+                    fileReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
