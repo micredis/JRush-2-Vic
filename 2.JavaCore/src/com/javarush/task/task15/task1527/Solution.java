@@ -25,7 +25,7 @@ public class Solution {
     }
 
     private boolean isDouble(String s) {
-        return s.matches("-?\\d*\\.\\d*");
+        return s.matches("-?\\d*\\.?\\d*");
     }
 
     private String readInput() {
