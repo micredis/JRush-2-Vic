@@ -50,8 +50,8 @@ public class Person {
         return String.format(
                 "%s %s %s",
                 name,
-                sex.toString(),
-                String.format("%1$td-%1$tm-%1$tY", birthDay)
+                (sex != null) ? sex.toString() : null,
+                (birthDay != null) ? String.format("%1$td-%1$tb-%1$tY", birthDay) : null
         );
     }
 }
