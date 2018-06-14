@@ -11,8 +11,8 @@ CRUD 2
 
 public class Solution {
     public static volatile List<Person> allPeople = new ArrayList<Person>();
-    private static final List<Integer> selectedIDs = new ArrayList<Integer>();
-    private static final List<Person> selectedPeople = new ArrayList<Person>();
+    private static final List<Integer> SELECTED_IDs = new ArrayList<Integer>();
+    private static final List<Person> SELECTED_PEOPLE = new ArrayList<Person>();
     private static final String CREATE = "-c";
     private static final String UPDATE = "-u";
     private static final String DELETE = "-d";
@@ -28,56 +28,57 @@ public class Solution {
     public static void main(String[] args) {
         //start here - начни тут
         if (args.length < 2) return;
-        String key = args[0];
         int id = -1;
         String name = "";
         Sex sex = null;
         Date dob = null;
         Person person = null;
         int sexIndex;
-        switch (key) {
-            // TODO: revise CREATE case to accept multiple records
+        List<Integer> recordIndices = new ArrayList<Integer>();
+        switch (args[0]) {
             case CREATE:
-                List<Integer> createIndices = new ArrayList<Integer>();
-                for (int i = 3; i < args.length; i++) {
+                recordIndices.add(1);
+                for (int i = 1; i < args.length - 2; i++) {
                     if (isSex(args[i])) {
-                        createIndices.add(i - 1);
+                        recordIndices.add(i + 2);
                     }
                 }
                 synchronized (allPeople) {
-                    sexIndex = indexOfSex(args, 0);
-                    for (int i = 1; i < sexIndex; i++) {
-                        name += args[i];
-                        name += (i != sexIndex - 1) ? " " : "";
-                    }
                     try {
-                        sex = Sex.parseSex(args[sexIndex]);
-                        dob = DATE_FORMAT.parse(args[sexIndex + 1]);
+                        for (Integer nameIndex : recordIndices) {
+                            for (int i = nameIndex; !isSex(args[i]); i++) {
+                                name += args[i];
+                                name += " ";
+                            }
+                            name = name.trim();
+                            sexIndex = indexOfSex(args, nameIndex + 1);
+                            sex = Sex.parseSex(args[sexIndex]);
+                            dob = DATE_FORMAT.parse(args[sexIndex + 1]);
+                            if (sex != null && sex.equals(Sex.MALE)) {
+                                person = Person.createMale(name, dob);
+                            } else if (sex != null && sex.equals(Sex.FEMALE)) {
+                                person = Person.createFemale(name, dob);
+                            }
+                            allPeople.add(person);
+                            id = allPeople.lastIndexOf(person);
+                            System.out.println(id);
+                            name = "";
+                        }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    if (sex != null && sex.equals(Sex.MALE)) {
-                        person = Person.createMale(name, dob);
-                        allPeople.add(person);
-                    } else if (sex != null && sex.equals(Sex.FEMALE)) {
-                        person = Person.createFemale(name, dob);
-                        allPeople.add(person);
-                    }
-                    id = allPeople.indexOf(person);
-                    System.out.println(id);
                 }
                 break;
             case UPDATE:
-                List<Integer> idIndices = new ArrayList<Integer>();
-                idIndices.add(1);
+                recordIndices.add(1);
                 for (int i = 2; i < args.length - 2; i++) {
                     if (isSex(args[i])) {
-                        idIndices.add(i + 2);
+                        recordIndices.add(i + 2);
                     }
                 }
                 synchronized (allPeople) {
                     try {
-                        for (Integer idIndex : idIndices) {
+                        for (Integer idIndex : recordIndices) {
                             id = Integer.parseInt(args[idIndex]);
                             for (int i = idIndex + 1; !isSex(args[i]); i++) {
                                 name += args[i];
@@ -103,20 +104,26 @@ public class Solution {
             case DELETE:
                 synchronized (allPeople) {
                     try {
-                        for (int i = 1; i < args.length; i++) {
-                            selectedIDs.add(Integer.parseInt(args[i]));
+                        synchronized (SELECTED_IDs) {
+                            for (int i = 1; i < args.length; i++) {
+                                SELECTED_IDs.add(Integer.parseInt(args[i]));
+                            }
                         }
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                     }
                     try {
-                        for (Integer selectedID : selectedIDs) {
-                            person = allPeople.get(selectedID);
-                            if (person != null) {
-                                person.setName(null);
-                                person.setSex(null);
-                                person.setBirthDay(null);
-                                allPeople.set(selectedID, person);
+                        synchronized (SELECTED_IDs) {
+                            for (Integer selectedID : SELECTED_IDs) {
+                                if (selectedID < allPeople.size()) {
+                                    person = allPeople.get(selectedID);
+                                    if (person != null) {
+                                        person.setName(null);
+                                        person.setSex(null);
+                                        person.setBirthDay(null);
+                                        allPeople.set(selectedID, person);
+                                    }
+                                }
                             }
                         }
                     } catch (IndexOutOfBoundsException e) {
@@ -127,31 +134,37 @@ public class Solution {
             case INFO:
                 synchronized (allPeople) {
                     try {
-                        for (int i = 1; i < args.length; i++) {
-                            selectedIDs.add(Integer.parseInt(args[i]));
+                        synchronized (SELECTED_IDs) {
+                            for (int i = 1; i < args.length; i++) {
+                                SELECTED_IDs.add(Integer.parseInt(args[i]));
+                            }
                         }
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                     }
                     try {
-                        for (Integer selectedID : selectedIDs) {
-                            person = allPeople.get(selectedID);
-                            selectedPeople.add(person);
+                        synchronized (SELECTED_IDs) {
+                            for (Integer selectedID : SELECTED_IDs) {
+                                if (selectedID < allPeople.size()) {
+                                    person = allPeople.get(selectedID);
+                                    synchronized (SELECTED_PEOPLE) {
+                                        SELECTED_PEOPLE.add(person);
+                                    }
+                                }
+                            }
                         }
                     } catch (IndexOutOfBoundsException e) {
                         e.printStackTrace();
                     }
-                    for (Person selectedPerson : selectedPeople) {
-                        System.out.println(selectedPerson);
+                    synchronized (SELECTED_PEOPLE) {
+                        for (Person selectedPerson : SELECTED_PEOPLE) {
+                            System.out.println(selectedPerson);
+                        }
                     }
                 }
                 break;
             default:
                 break;
-        }
-        // TODO: remove the loop below (for - sout)
-        for (Person prsn : allPeople) {
-            System.out.println(prsn);
         }
     }
 
