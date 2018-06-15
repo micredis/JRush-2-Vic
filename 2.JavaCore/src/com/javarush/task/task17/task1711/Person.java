@@ -46,7 +46,7 @@ public class Person {
     }
 
     @Override
-    public String toString() {
+    public synchronized String toString() {
         return String.format(
                 "%s %s %s",
                 name,

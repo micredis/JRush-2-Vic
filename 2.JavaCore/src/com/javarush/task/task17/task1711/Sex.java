@@ -7,7 +7,7 @@ public enum Sex {
     FEMALE;
 
     @Override
-    public String toString() {
+    public synchronized String toString() {
         String result = null;
         switch (this) {
             case MALE: result = "м";
@@ -20,7 +20,7 @@ public enum Sex {
         return result;
     }
 
-    public static Sex parseSex(String sex) throws ParseException {
+    public static synchronized Sex parseSex(String sex) throws ParseException {
         Sex result;
         switch (sex) {
             case "м": result = Sex.MALE;

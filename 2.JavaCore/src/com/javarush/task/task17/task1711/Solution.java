@@ -12,7 +12,6 @@ CRUD 2
 public class Solution {
     public static volatile List<Person> allPeople = new ArrayList<Person>();
     private static final List<Integer> SELECTED_IDs = new ArrayList<Integer>();
-    private static final List<Person> SELECTED_PEOPLE = new ArrayList<Person>();
     private static final String CREATE = "-c";
     private static final String UPDATE = "-u";
     private static final String DELETE = "-d";
@@ -133,37 +132,19 @@ public class Solution {
                 break;
             case INFO:
                 synchronized (allPeople) {
-                    try {
-                        synchronized (SELECTED_IDs) {
-                            for (int i = 1; i < args.length; i++) {
-                                SELECTED_IDs.add(Integer.parseInt(args[i]));
-                            }
-                        }
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        synchronized (SELECTED_IDs) {
-                            for (Integer selectedID : SELECTED_IDs) {
-                                if (selectedID < allPeople.size()) {
-                                    person = allPeople.get(selectedID);
-                                    synchronized (SELECTED_PEOPLE) {
-                                        SELECTED_PEOPLE.add(person);
-                                    }
-                                }
-                            }
-                        }
-                    } catch (IndexOutOfBoundsException e) {
-                        e.printStackTrace();
-                    }
-                    synchronized (SELECTED_PEOPLE) {
-                        for (Person selectedPerson : SELECTED_PEOPLE) {
-                            System.out.println(selectedPerson);
+                    for (int i = 1; i < args.length; i++) {
+                        try {
+                            id = Integer.parseInt(args[i]);
+                            System.out.println(allPeople.get(id));
+                        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
                 break;
             default:
+                synchronized (allPeople) {
+                }
                 break;
         }
     }
