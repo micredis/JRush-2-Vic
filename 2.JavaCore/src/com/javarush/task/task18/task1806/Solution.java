@@ -11,17 +11,19 @@ import java.io.IOException;
 public class Solution {
     public static void main(String[] args) throws IOException {
         FileInputStream inputStream = new FileInputStream("c:/data.txt");
+//        FileInputStream inputStream = new FileInputStream("/home/lab511a/IdeaProjects/JavaRushVictoria/JavaRushTasks/2.JavaCore/src/com/javarush/task/task18/task1806/data.txt");
         // Создаем поток-записи-байт-в-файл
         FileOutputStream outputStream = new FileOutputStream("c:/result.txt");
+//        FileOutputStream outputStream = new FileOutputStream("/home/lab511a/IdeaProjects/JavaRushVictoria/JavaRushTasks/2.JavaCore/src/com/javarush/task/task18/task1806/result.txt");
 
-        if (inputStream.read() >= 0) {
+        byte[] buffer = new byte[inputStream.available()];
+        if (inputStream.available() > 0) {
             //читаем весь файл одним куском
-            byte[] buffer = new byte[inputStream.available()];
             int count = inputStream.read(buffer);
             outputStream.write(buffer, 0, count);
         }
 
-        inputStream.reset();
-        outputStream.flush();
+        inputStream.close();
+        outputStream.close();
     }
 }
