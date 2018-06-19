@@ -38,15 +38,13 @@ public class Solution {
             fos1 = new FileOutputStream(destFileName1);
             fos2 = new FileOutputStream(destFileName2);
             int estSize = fis.available();
-            byte[] buffer = new byte[estSize / 4];
-            int half = (estSize % 2 == 0) ? estSize / 2 : estSize / 2 + 1;
-            while (fis.available() > 0) {
+            if (estSize > 0) {
+                byte[] buffer = new byte[estSize];
                 int count = fis.read(buffer);
-                if (fis.available() >= half) {
-                    fos1.write(buffer, 0, count);
-                } else {
-                    fos2.write(buffer, 0, count);
-                }
+                int half = (count % 2 == 0) ? count / 2 : count / 2 + 1;
+                int secondHalf = estSize - half;
+                fos1.write(buffer, 0, half);
+                fos2.write(buffer, half, secondHalf);
             }
         } catch (IOException e) {
             e.printStackTrace();
