@@ -30,6 +30,6 @@ public class Solution {
         if (symbolCount == 0)
             return 0.0;
         double roundBase = Math.pow(10, precision);
-        return (double) (Math.round(1.0 * spaceCount / symbolCount * roundBase)) / roundBase;
+        return 1.0 * spaceCount / symbolCount * roundBase;
     }
 }
