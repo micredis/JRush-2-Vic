@@ -1,0 +1,5 @@
+The line and the text below is an addendum to the file destination.txt
+that must be added to the beginning of it from the file source.txt
+---------------------------------------
+It doesn't matter what they say,
+They're giving the game away hey hey...

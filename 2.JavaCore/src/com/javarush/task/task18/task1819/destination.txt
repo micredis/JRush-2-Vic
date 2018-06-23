@@ -1,0 +1,19 @@
+The line and the text below is an addendum to the file destination.txt
+that must be added to the beginning of it from the file source.txt
+---------------------------------------
+It doesn't matter what they say,
+They're giving the game away hey hey...The line and the text below is an addendum to the file destination.txt
+that must be added to the beginning of it from the file source.txt
+---------------------------------------
+It doesn't matter what they say,
+They're giving the game away hey hey...
+5
+8
+-2
+11
+3
+-5
+2
+10
+-76346534
+76346534
