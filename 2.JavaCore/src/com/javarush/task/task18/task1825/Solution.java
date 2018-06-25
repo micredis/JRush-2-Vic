@@ -24,6 +24,9 @@ public class Solution {
         closeFos(this.fos);
     }
 
+    // /home/lab511a/IdeaProjects/JavaRushVictoria/JavaRushTasks/2.JavaCore/src/com/javarush/task/task18/task1825/song.txt.part1
+    // /home/lab511a/IdeaProjects/JavaRushVictoria/JavaRushTasks/2.JavaCore/src/com/javarush/task/task18/task1825/song.txt.part2
+    // /home/lab511a/IdeaProjects/JavaRushVictoria/JavaRushTasks/2.JavaCore/src/com/javarush/task/task18/task1825/song.txt.part3
     private void readFileNames() {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             String fileName = reader.readLine();
