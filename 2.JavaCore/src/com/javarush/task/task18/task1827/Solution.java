@@ -11,7 +11,7 @@ public class Solution {
     private String fileName;
     private int id;
     private String productName = "";
-    private double price;
+    private String price;
     private String quantity;
 
     public static void main(String[] args) throws Exception {
@@ -23,24 +23,30 @@ public class Solution {
     private void go(String[] args) {
         this.fileName = readFileName();
         initFields(args);
-        String record;
-        if (this.id == 1) {
-            record = String.format(
-                    "%-8d%-30.30s%-8.2f%-4.4s",
-                    this.id,
-                    this.productName,
-                    this.price,
-                    this.quantity
-            );
-        } else {
-            record = String.format(
-                    "%n%-8d%-30.30s%-8.2f%-4.4s",
-                    this.id,
-                    this.productName,
-                    this.price,
-                    this.quantity
-            );
-        }
+        String record = String.format(
+                "%-8d%-30.30s%-8.8s%-4.4s",
+                this.id,
+                this.productName,
+                this.price,
+                this.quantity
+        );
+//        if (this.id == 1) {
+//            record = String.format(
+//                    "%-8d%-30.30s%-8.8s%-4.4s",
+//                    this.id,
+//                    this.productName,
+//                    this.price,
+//                    this.quantity
+//            );
+//        } else {
+//            record = String.format(
+//                    "%n%-8d%-30.30s%-8.8s%-4.4s",
+//                    this.id,
+//                    this.productName,
+//                    this.price,
+//                    this.quantity
+//            );
+//        }
         addRecord(fileName, record);
     }
 
@@ -64,34 +70,36 @@ public class Solution {
             this.productName += " ";
         }
         this.productName = this.productName.substring(0, 30);
-        this.price = Double.parseDouble(args[args.length - 2]);
+        this.price = args[args.length - 2];
         this.quantity = args[args.length - 1];
     }
 
     private int getLastID(String fileName) {
-        int id = 0;
-        BufferedReader fileReader;
-        try (FileInputStream fis = new FileInputStream(fileName)) {
-            int estFileSize = fis.available();
-            if (estFileSize > 3000) {
-                fis.skip(estFileSize - (estFileSize * 95) / 100);
-            }
-            fileReader = new BufferedReader(new InputStreamReader(fis));
-            String lastLine = "";
+        int maxID = 0;
+        try (BufferedReader fileReader =
+                     new BufferedReader(
+                             new InputStreamReader(
+                                     new FileInputStream(fileName)))) {
             while (fileReader.ready()) {
-                lastLine = fileReader.readLine();
+                String line = fileReader.readLine();
+                int id = Integer.parseInt(line.substring(0, 8).trim());
+                if (id > maxID)
+                    maxID = id;
             }
-            id = Integer.parseInt(lastLine.substring(0, 8));
-            fileReader.close();
         } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
         }
-        return id;
+        return maxID;
     }
 
     private void addRecord(String fileName, String record) {
         try (FileOutputStream fos = new FileOutputStream(fileName, true)) {
-            fos.write(record.getBytes());
+            if (this.id == 1) {
+                fos.write(record.getBytes());
+            } else {
+                fos.write("\n".getBytes());
+                fos.write(record.getBytes());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
