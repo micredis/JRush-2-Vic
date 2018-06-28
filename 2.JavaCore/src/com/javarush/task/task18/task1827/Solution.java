@@ -25,7 +25,8 @@ public class Solution {
         int id = getMaxID(fileName) + 1;
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(fileName, true))) {
             String record = String.format("%-8d%-30.30s%-8.8s%-4.4s", id, args[1], args[2], args[3]);
-            fileWriter.newLine();
+            if (id != 1)
+                fileWriter.newLine();
             fileWriter.write(record);
         } catch (IOException e) {
             e.printStackTrace();
