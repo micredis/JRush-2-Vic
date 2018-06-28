@@ -9,12 +9,14 @@ import java.util.Scanner;
 
 public class Solution {
     public static void main(String[] args) throws Exception {
+        // -c Куртка для сноубордистов, размер XL 10173.999 1234
         if (args.length != 0 && "-c".equals(args[0])) {
             new Solution().go(args);
         }
     }
 
     private void go(String[] args) {
+        // /home/micredis/IdeaProjects/JavaRushVictoria/JavaRushTasks/2.JavaCore/src/com/javarush/task/task18/task1827/pricelist.txt
         String fileName = readFileName();
         createRecord(args, fileName);
     }
