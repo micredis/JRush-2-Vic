@@ -18,14 +18,14 @@ public class Solution {
                 FileOutputStream outputStream = new FileOutputStream(args[0]);
                 InputStream is = Solution.class.getClassLoader().getResourceAsStream(args[1])
         ) {
-//            byte[] b = new byte[is.available()];
-//            outputStream.write(is.read(b));
+            byte[] b = new byte[is.available()];
+            outputStream.write(is.read(b));
 
             int value = 123_456_789;
             System.out.println(value);
 
             Example result = null;
-            String s = "c";
+            String s = "a";
             switch (s) {
                 case "a": {
                     result = new Solution().new A();
