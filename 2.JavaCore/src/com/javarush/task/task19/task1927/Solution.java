@@ -23,6 +23,9 @@ public class Solution {
         testString.printSomething();
         System.setOut(consoleStream);
         String[] lines = getLines(baos);
+//        alternative solution using split():
+//        NB: all sout below must end with println (not with print) in this case!
+//        String[] lines = baos.toString().split(System.lineSeparator());
         for (int i = 0; i < lines.length; i++) {
             if ((i + 1) % 2 == 0) {
                 System.out.print(lines[i]);
