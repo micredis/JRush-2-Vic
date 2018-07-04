@@ -13,20 +13,19 @@ public class Solution {
         System.out.println("it's Solution class");
     }
 
-    public static void main(String... args) throws IOException {
+    public static void main(String... args) {
         try (
                 FileOutputStream outputStream = new FileOutputStream(args[0]);
-                InputStream is = Solution.class.getClassLoader().getResourceAsStream(args[1]);
+                InputStream is = Solution.class.getClassLoader().getResourceAsStream(args[1])
         ) {
-            ;
-            byte[] b = new byte[is.available()];
-            outputStream.write(is.read(b));
+//            byte[] b = new byte[is.available()];
+//            outputStream.write(is.read(b));
 
             int value = 123_456_789;
             System.out.println(value);
 
             Example result = null;
-            String s = "a";
+            String s = "c";
             switch (s) {
                 case "a": {
                     result = new Solution().new A();
@@ -42,12 +41,12 @@ public class Solution {
                 }
             }
 
-            if (result instanceof A) {
+            if (result instanceof C) {
                 C p = (C) result;
                 System.out.println(p.getClass().getSimpleName());
             }
 
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 
