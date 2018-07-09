@@ -8,8 +8,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Solution {
     public static void main(String[] args) {
@@ -20,7 +18,7 @@ public class Solution {
     private void go(String[] args) {
         String tag = args[0];
         String line = fileToLine();
-        printAllTags(tag, line);
+        printAllTags(tag, line, 0);
     }
 
     private String fileToLine() {
@@ -36,15 +34,24 @@ public class Solution {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result.toString().replaceAll("[\\s\\r\\n]+", " ");
+        return result.toString().replaceAll("[\\r\\n]+", "");
     }
 
-    private void printAllTags(String tag, String stringToSearch) {
-        Pattern pattern = Pattern.compile("<" + tag + "(.+)>(\\S+)</" + tag + ">");
-        Matcher matcher = pattern.matcher(stringToSearch);
-        while (matcher.find()) {
-            String group = matcher.group(1);
-            System.out.println(group);
+    private void printAllTags(String tag, String stringToSearch, int offset) {
+        int tagCount = 0, leftPosition = 0;
+        for (int i = offset; i < stringToSearch.length() - tag.length() - 1; i++) {
+            String sub = stringToSearch.substring(i);
+            if (sub.matches("<" + tag + ".*>.*")) {
+                if (tagCount == 0)
+                    leftPosition = i;
+                tagCount++;
+            } else if (sub.matches("</" + tag + ">.*") && tagCount > 0) {
+                tagCount--;
+                if (tagCount == 0) {
+                    System.out.println(stringToSearch.substring(leftPosition, i + tag.length() + 3));
+                    printAllTags(tag, stringToSearch.substring(leftPosition + tag.length(), i), 1);
+                }
+            }
         }
     }
 }
