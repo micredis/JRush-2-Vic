@@ -1,10 +1,7 @@
 package com.javarush.task.task20.task2003;
 
 import java.io.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /*
 Знакомство с properties
@@ -26,39 +23,22 @@ public class Solution {
 
     public void save(OutputStream outputStream) throws Exception {
         //implement this method - реализуйте этот метод
-        outputStream.write(("#" + new Date().toString()).getBytes());
-        outputStream.write(System.lineSeparator().getBytes());
-        for (Map.Entry<String, String> entry : Solution.properties.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            outputStream.write((key + " = " + value).getBytes());
-            outputStream.write(System.lineSeparator().getBytes());
+        Properties prop = new Properties();
+        for (Map.Entry<String, String> pair : Solution.properties.entrySet()) {
+            prop.setProperty(pair.getKey(), pair.getValue());
         }
-        outputStream.flush();
+        prop.store(outputStream, null);
     }
 
     public void load(InputStream inputStream) throws Exception {
         //implement this method - реализуйте этот метод
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            if (!line.startsWith("#") && !line.startsWith("!")) {
-                int equalsSignIndex = line.indexOf("=");
-                int colonIndex = line.indexOf(":");
-                int delimiterIndex;
-                if (equalsSignIndex > -1 && colonIndex > -1) {
-                    delimiterIndex = (equalsSignIndex < colonIndex) ? equalsSignIndex : colonIndex;
-                } else if (equalsSignIndex > -1) {
-                    delimiterIndex = equalsSignIndex;
-                } else {
-                    delimiterIndex = colonIndex;
-                }
-                String key = line.substring(0, delimiterIndex).trim();
-                String value = line.substring(delimiterIndex + 1).trim();
-                if (value.endsWith("\\"))
-                    value = value.substring(0, value.length() - 1) + reader.readLine().trim();
-                Solution.properties.put(key, value);
-            }
+        Properties prop = new Properties();
+        prop.load(inputStream);
+        Enumeration<?> enumPropKeys = prop.propertyNames();
+        while (enumPropKeys.hasMoreElements()) {
+            String key = (String) enumPropKeys.nextElement();
+            String value = prop.getProperty(key);
+            Solution.properties.put(key, value);
         }
     }
 
@@ -76,11 +56,7 @@ public class Solution {
         }
 
 //        load from .properties file to the properties map
-        try (FileInputStream fis = new FileInputStream("/home/micredis/IdeaProjects/JavaRushVictoria/JavaRushTasks/2.JavaCore/src/com/javarush/task/task20/task2003/test.properties")) {
-            solution.load(fis);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        solution.fillInPropertiesMap();
 
 //        print properties map
         for (Map.Entry<String, String> entry : Solution.properties.entrySet()) {
